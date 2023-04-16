@@ -10,12 +10,13 @@ model_path = os.environ.get("MODEL_PATH")
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
+
 def classify_sms(sms: str):
     if torch.mps.is_available():
         model.to(torch.device("mps"))
         print(f"Model device: {model.device}")
     # tokenize sms
-    inputs = tokenizer(sms, 
+    inputs = tokenizer(sms,
                        padding=True,
                        truncation=True,
                        max_length=128,
@@ -29,6 +30,7 @@ def classify_sms(sms: str):
     label_idx = torch.argmax(outputs.logits, dim=-1).item()
 
     return label_idx
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
