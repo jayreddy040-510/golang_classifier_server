@@ -7,6 +7,8 @@ import (
 	"os/exec"
     "io"
     "encoding/json"
+    "log"
+    "github.com/joho/godotenv"
 )
     type RequestBody struct {
         SMS string `json:"sms"`
@@ -19,6 +21,7 @@ import (
 
         apiKey := r.Header.Get("apiKey")
         if apiKey != os.Getenv("API_KEY") {
+            fmt.Println(os.Getenv("API_KEY"), apiKey)
             http.Error(w, "You are not authorized to access this resource.", http.StatusForbidden)
             return
         }
@@ -37,9 +40,7 @@ import (
         }
 
         sms := requestBody.SMS
-        fmt.Fprintf(w, "SMS receieved: %s", sms)
-
-
+        fmt.Println(sms)
         cmd := exec.Command("python3", "sms_spam_classifier.py", sms)
         output, err := cmd.Output()
 
@@ -47,8 +48,18 @@ import (
             http.Error(w, err.Error(), http.StatusInternalServerError)
         }
 
+        fmt.Println("model output", output)
         w.Write(output)
     }
+
+
+    func init() {
+        err := godotenv.Load()
+        if err != nil {
+            log.Fatal("Error loading .env file", err)
+        }
+    }
+
 
     func main() {
         fmt.Println("starting up server...")
