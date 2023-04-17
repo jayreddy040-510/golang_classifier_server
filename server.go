@@ -40,15 +40,15 @@ import (
         }
 
         sms := requestBody.SMS
-        fmt.Println(sms)
+        // fmt.Println(sms)
         cmd := exec.Command("python3", "sms_spam_classifier.py", sms)
-        output, err := cmd.Output()
+        output, err := cmd.CombinedOutput()
 
         if err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
         }
 
-        fmt.Println("model output", output)
+        // fmt.Println("model output", output)
         w.Write(output)
     }
 

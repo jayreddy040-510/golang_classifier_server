@@ -30,7 +30,6 @@ def classify_sms(sms: str):
 
     # add inputs to "mps" device
     inputs = {k: v.to(torch.device(device)) for k, v in inputs.items()}
-    print(f"device: {model.device}")
 
     # get model predictions
     with torch.no_grad():
