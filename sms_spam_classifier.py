@@ -42,7 +42,6 @@ def classify_sms(sms: str):
     return label_idx
 
 
-"""
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Please pass an SMS")
@@ -51,5 +50,5 @@ if __name__ == "__main__":
     sms = sys.argv[1]
     sms_spam_classification = classify_sms(sms)
     print(sms_spam_classification)
-"""
-print(classify_sms("For the low price $9.99 you can get your very own used car! Call now at 888-888-8888!"))
+
+# print(classify_sms("For the price $9.99 you can get ur very own used car")
