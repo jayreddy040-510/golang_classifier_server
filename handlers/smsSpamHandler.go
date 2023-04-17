@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
     type RequestBody struct {
         SMS string `json:"sms"`
     }
-    func smsSpamDetectionHandler(w http.ResponseWriter, r *http.Request) {
+    func SmsSpamDetectionHandler(w http.ResponseWriter, r *http.Request) {
         if r.Method != http.MethodPost {
             http.Error(w, "Method not allowed.", http.StatusMethodNotAllowed)
             return
@@ -40,15 +40,14 @@ import (
         }
 
         sms := requestBody.SMS
-        // fmt.Println(sms)
         cmd := exec.Command("python3", "sms_spam_classifier.py", sms)
-        output, err := cmd.CombinedOutput()
+        output, err := cmd.Output()
 
         if err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
         }
 
-        // fmt.Println("model output", output)
+        fmt.Printf("For SMS: \"%s\", \nSpam bool: %s", sms, string(output))
         w.Write(output)
     }
 
@@ -58,13 +57,6 @@ import (
         if err != nil {
             log.Fatal("Error loading .env file", err)
         }
-    }
-
-
-    func main() {
-        fmt.Println("starting up server...")
-        http.HandleFunc("/detectspam", smsSpamDetectionHandler)
-        http.ListenAndServe(":7777", nil)
     }
 
 
